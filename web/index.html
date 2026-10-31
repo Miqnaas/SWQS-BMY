@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Smart Water Quality Monitoring — an academic, research-only interactive machine learning lab.">
+<title>SWQS — Water Intelligence Lab</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head><body>
+<header class="header wrap">
+  <a class="brand" href="#top"><span class="brand-icon">◈</span> SWQS <span class="muted brand-sub">/ RESEARCH LAB</span></a>
+  <div class="header-right"><span class="dot"></span> <span id="connection">Checking research model…</span></div>
+</header>
+<main id="top" class="wrap">
+  <section class="hero">
+    <div><div class="eyebrow">SMART WATER QUALITY MONITORING SYSTEM · 2026</div>
+      <h1>Water quality,<br><em>understood through data.</em></h1>
+      <p>A real classification experiment. Explore nine physicochemical variables, inspect honest model evaluation, and test research-dataset predictions.</p>
+      <div class="hero-tags"><span>9 FEATURES</span><span>3,276 SAMPLES</span><span>5 CANDIDATE MODELS</span></div>
+      <a href="#lab" class="cta">Open Prediction Lab <span>↗</span></a>
+    </div>
+    <div class="orb-container" aria-hidden="true">
+      <div class="orb"><div class="orb-core"></div><div class="orb-ring"></div></div>
+      <span class="orb-label a">pH</span><span class="orb-label b">TDS / Solids</span><span class="orb-label c">Turbidity</span>
+    </div>
+  </section>
+  <div class="notice"><strong>Educational prototype, not a drinking-water safety test.</strong> No predicted class can certify a real sample as safe. This lab requires all nine dataset-compatible inputs; low-cost ESP32 sensors cannot supply all of them.</div>
+  <section class="stats" aria-label="Research overview">
+    <article><div class="metric-label">Dataset samples</div><strong>3,276</strong><small>Public Kaggle dataset</small></article>
+    <article><div class="metric-label">Training / test split</div><strong>80 / 20</strong><small>Stratified, seed 42</small></article>
+    <article><div class="metric-label">Selected model</div><strong id="chosenModel">Loading…</strong><small>Chosen using training-only CV</small></article>
+    <article><div class="metric-label">Held-out balanced accuracy</div><strong id="balancedAccuracy">—</strong><small>Not a measure of drinking safety</small></article>
+  </section>
+  <section id="lab" class="section">
+    <div class="section-head"><div><div class="eyebrow">01 / INTERACTIVE EXPERIMENT</div><h2>Prediction Laboratory</h2><p>Choose a held-out dataset row or enter your own nine values. All results come from the fitted model, never from hard-coded rules.</p></div></div>
+    <div class="grid">
+      <article class="panel"><div class="panel-header"><h3>Physicochemical inputs</h3><span class="micro">9 / 9 features required</span></div>
+        <div class="samplebar"><label for="sampleSelect">Load a real held-out sample</label><select id="sampleSelect"><option value="">Manual input — no sample selected</option></select></div>
+        <form id="predictForm"><div id="featureFields" class="fields"></div><button type="submit" class="cta full" id="predictBtn">Run research prediction <span>→</span></button></form>
+        <p class="fineprint">Leave pH, Sulfate, or Trihalomethanes blank only to demonstrate training-median imputation. That does <strong>not</strong> represent a real sensor measurement.</p>
+      </article>
+      <article class="panel result"><div class="panel-header"><h3>Model output</h3><span class="micro">EXPERIMENTAL ONLY</span></div>
+        <div id="resultEmpty" class="placeholder">Enter values and click <strong>Run research prediction</strong>. The result will appear here with scientific limitations.</div>
+        <div id="resultBody" hidden>
+          <div class="metric-label">Predicted dataset label</div><div id="predictedLabel" class="predicted"></div>
+          <div class="score-label">Uncalibrated class 1 score <span id="scoreValue">—</span></div>
+          <div class="score-track"><span id="scoreBar"></span></div><p class="fineprint">This score is not the probability that water is safe to drink.</p>
+          <div id="actualLabel" class="actual" hidden></div>
+          <div id="warnings" class="warnings"></div>
+        </div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div class="caution"><strong>Research disclaimer</strong><p>False-safe classifications occurred in testing. Never use this model to approve water for consumption.</p></div>
+      </article>
+    </div>
+  </section>
+  <section class="section" id="evaluation">
+    <div class="section-head"><div><div class="eyebrow">02 / REPRODUCIBLE EVIDENCE</div><h2>Model evaluation</h2><p>Five-fold cross-validation was run on the training set. The final model was evaluated once on held-out examples.</p></div></div>
+    <div class="grid">
+      <article class="panel"><h3>Training-only CV balanced accuracy</h3><div id="cvBars" class="bars"><p>Loading model metadata…</p></div><p class="fineprint">Baseline balanced accuracy = 0.5. Larger values represent better class-averaged recall.</p></article>
+      <article class="panel"><h3>Held-out confusion matrix</h3><div class="confusion"><div></div><div>Predicted 0</div><div>Predicted 1</div><div>Actual 0</div><strong id="cm00">—</strong><strong id="cm01" class="danger">—</strong><div>Actual 1</div><strong id="cm10">—</strong><strong id="cm11">—</strong></div><p class="fineprint">Actual 0 predicted 1 is a false-safe error. That outcome is especially important in this project.</p></article>
+    </div>
+  </section>
+  <section class="section"><div class="eyebrow">03 / RESEARCH DELIVERABLES</div><h2>Academic foundation</h2><div class="panel"><p>The academic project covers Sections 1–4, the dataset feature dictionary, exploratory plots, a leakage-safe preprocessing notebook, and an optional ESP32 architecture. Model training and this lab are additional extensions.</p><p><a class="link" href="https://github.com/Miqnaas/SWQS-BMY" target="_blank" rel="noopener">View source on GitHub ↗</a> · <a class="link" href="https://www.kaggle.com/datasets/adityakadiwal/water-potability" target="_blank" rel="noopener">Original dataset ↗</a></p></div></section>
+</main>
+<footer class="wrap footer">SWQS / UNIVERSITY RESEARCH · MODEL-BASED DATASET CLASSIFICATION ONLY · NOT FOR SAFETY DECISIONS</footer>
+<script src="/assets/app.js" defer></script>
+</body></html>

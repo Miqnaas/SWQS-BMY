@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Explore the water-quality project in an interactive real-time 3D water and ESP32 sensor prototype. Educational sensor simulation only."/>
+<title>3D Water & Sensor Explorer | Water Intelligence</title>
+<link rel="stylesheet" href="./assets/experience.css"/>
+</head><body>
+<header class="top"><a class="brand" href="./"><b>◈</b> WATER<span>/</span>INTELLIGENCE</a><nav><a href="./research.html">Research Explorer</a><a href="./#prediction-form">Prediction Lab ↗</a></nav></header>
+<main class="page">
+  <div class="intro"><div class="kicker">05 / INTERACTIVE SCIENTIFIC VISUALIZATION</div><h1>Go beneath the <em>surface.</em></h1><p>Explore a real-time 3D model of a water sample and an illustrative ESP32 sensor arrangement. Rotate the scene, inspect the modules, and see which measurements can—and cannot—be supplied to the trained machine-learning model.</p></div>
+  <section class="experience" aria-labelledby="labtitle">
+    <div class="viewer">
+      <div class="scene-menu"><span>INTERACTIVE 3D</span><div class="scene-toggle" role="group" aria-label="Select 3D scene"><button id="waterMode" class="selected" type="button" aria-pressed="true">Water sample</button><button id="hardwareMode" type="button" aria-pressed="false">ESP32 prototype</button></div></div>
+      <div class="viewport" id="viewport">
+        <canvas id="threeCanvas" aria-label="Interactive three-dimensional water sample or sensor prototype" role="img"></canvas>
+        <div class="render-status" id="renderStatus" role="status">Loading WebGL viewer…</div>
+        <div id="hotspots" class="hotspots" aria-label="Interactive points on the model"></div>
+        <div class="viewport-caption"><div><span class="pulse"></span><b id="sceneLabel">H₂O · SAMPLE</b><small id="sceneSub">MODEL VIEW / EXPLORE</small></div><div class="canvas-tools"><button id="resetView" type="button" title="Reset view">⟳ Reset view</button><button id="toggleMotion" type="button" title="Pause rotation">Ⅱ Pause</button></div></div>
+      </div>
+      <div class="viewer-hint"><span>↔ Drag to rotate</span><span>↕ Scroll or pinch to zoom</span><span>● Select a marker to inspect it</span></div>
+    </div>
+    <aside class="details"><div class="kicker">CURRENT SELECTION</div><div class="sensor-icon" id="sensorSymbol">◉</div><div class="sensor-tag" id="sensorTag">DATASET INDICATOR</div><h2 id="sensorTitle">Water quality indicators</h2><p id="sensorBody">Explore individual measurements through the glowing 3D markers. Not all nine laboratory-defined dataset columns are available from affordable sensors.</p><div class="detail-facts" id="detailFacts"><div><small>INPUT CONTRACT</small><strong>9 laboratory-defined features</strong></div><div><small>SENSOR COMPATIBILITY</small><strong>Only a subset is available</strong></div></div><div class="detail-note" id="detailNote">This 3D view is an educational illustration, not a calibrated measurement or a live sensor feed.</div><a href="./research.html#study" class="detail-link">Compare all nine features ↗</a></aside>
+  </section>
+  <section class="simulation" id="simulation"><div class="section-title"><div><div class="kicker">06 / SIMULATED READINGS</div><h2>Experiment with the <em>sensor signals.</em></h2></div><p>These controls adjust illustrative readings for learning purposes. They do not sample physical water, operate a real ESP32, or feed a validated nine-feature classifier.</p></div>
+   <div class="sim-grid" id="simControls"></div><div class="sim-warning"><strong>Simulation ≠ prediction.</strong> Temperature is absent from the CSV; TDS is not automatically equivalent to its Solids feature; pH, turbidity and EC require calibration. The other five dataset measurements are not captured by this sensor kit.</div>
+  </section>
+  <section class="bridge"><div><div class="kicker">THE DATASET–DEVICE GAP</div><h2>Four possible measurements.<br/><em>Nine required inputs.</em></h2><p>The low-cost prototype measures a subset of quantities (with EC optional). The trained Random Forest requires nine compatible laboratory-defined inputs. We deliberately keep this sensor demonstration separate from the real Prediction Lab.</p></div><div class="gap-comparison"><div class="gap-panel"><span>9 DATASET FEATURES</span><strong>pH, Hardness, Solids, Chloramines, Sulfate, Conductivity, Organic Carbon, Trihalomethanes, Turbidity</strong></div><div class="gap-arrow">≠</div><div class="gap-panel"><span>BASIC SENSOR PROTOTYPE</span><strong>pH · TDS proxy · Turbidity · Temperature<br/>Optional EC probe</strong></div></div></section>
+  <div class="next"><div><div class="kicker">GO FURTHER</div><h2>Explore the evidence behind the visuals.</h2><p>Open the actual dataset explorer and preprocessing walkthrough—or test nine compatible measurements in the research-only prediction engine.</p></div><div class="next-links"><a href="./research.html">Research Explorer ↗</a><a href="./#prediction-form">Prediction Lab ↗</a></div></div>
+</main><footer>WATER / INTELLIGENCE <span>Interactive illustration · Not a water-safety certification · © University research project</span></footer>
+<script type="module" src="./assets/experience.js"></script>
+</body></html>

@@ -8,59 +8,134 @@ const fallback = document.querySelector('#hero3dFallback');
 const title = document.querySelector('#heroInspectorTitle');
 const tag = document.querySelector('#heroInspectorTag');
 const explanation = document.querySelector('#heroInspectorCopy');
-const status = {active: 'intro', running: true, drag: false, lastX:0, lastY:0, ry: .36, rx: -.08, toY:.36, toX:-.08, visible:true};
+const status = {active: 'intro', running: true, drag: false, lastX:0, lastY:0, ry: .12, rx: -.06, toY:.12, toX:-.06, visible:true};
 const facts = {
-  intro:['01 / WATER SAMPLE','Water under the lens','Rotate this conceptual water sample and choose a feature to inspect.'],
-  ph:['02 / FEATURE · pH','Acidity & alkalinity','A calibrated pH probe measures one dataset feature. Its reading alone does not establish safe drinking water.'],
-  solids:['03 / FEATURE · SOLIDS','Dissolved solids','The dataset Solids values are not interchangeable with readings from a low-cost conductivity-derived TDS module.'],
-  turbidity:['04 / FEATURE · TURBIDITY','Clarity under inspection','Optical turbidity can be measured after calibration, but it cannot detect all dissolved chemicals or microbes.']
+ intro:['01 / WATER MODEL','Clear water, nine measurements','Rotate the transparent water-like droplet. Select a point to explore a dataset feature; the visual is illustrative, not proof of potability.'],
+ ph:['02 / pH','Acidity and alkalinity','A calibrated pH probe can measure acidity or alkalinity. A pH reading alone cannot certify drinking-water safety.'],
+ hardness:['03 / HARDNESS','Calcium and magnesium','Water hardness reflects dissolved minerals, especially calcium and magnesium. It requires an appropriate measurement.'],
+ solids:['04 / SOLIDS','Dissolved substances','The dataset Solids feature is not interchangeable with TDS estimated from a low-cost conductivity sensor.'],
+ chloramines:['05 / CHLORAMINES','Disinfection compounds','Chloramines are chlorine-based disinfectants. Their concentration cannot be measured by a generic turbidity probe.'],
+ sulfate:['06 / SULFATE','Sulfate concentration','Sulfate ions require a suitable chemical measurement; the proposed low-cost sensor set cannot measure them directly.'],
+ conductivity:['07 / CONDUCTIVITY','Electrical conductivity','A conductivity sensor measures how readily water carries current, influenced by dissolved ions.'],
+ organic_carbon:['08 / ORGANIC CARBON','Organic carbon content','This indicator quantifies carbon in organic compounds and is not directly available from the proposed low-cost sensor set.'],
+ trihalomethanes:['09 / TRIHALOMETHANES','Disinfection by-products','Trihalomethanes require suitable laboratory testing rather than estimation from the visible clarity of water.'],
+ turbidity:['10 / TURBIDITY','Optical clarity','A calibrated turbidity sensor measures light scattering. Transparent water can still contain contaminants.']
 };
 function select(key){status.active=key;const f=facts[key]||facts.intro;tag.textContent=f[0];title.textContent=f[1];explanation.textContent=f[2];document.querySelectorAll('[data-water-feature]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.waterFeature===key)));}
 document.querySelectorAll('[data-water-feature]').forEach(b=>b.addEventListener('click',()=>select(b.dataset.waterFeature)));
 select('intro');
 const pause = document.querySelector('#heroPause');const reset=document.querySelector('#heroReset');
 pause.addEventListener('click',()=>{status.running=!status.running;pause.textContent=status.running?'Ⅱ Pause':'▶ Resume';pause.setAttribute('aria-pressed',String(!status.running));});
-reset.addEventListener('click',()=>{status.toY=.36;status.toX=-.08;select('intro');});
+reset.addEventListener('click',()=>{status.toY=.12;status.toX=-.06;select('intro');});
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches){status.running=false;pause.textContent='▶ Resume';pause.setAttribute('aria-pressed','true');}
 const heroObserver=new IntersectionObserver(entries=>{status.visible=entries[0]?.isIntersecting||false;},{threshold:0});heroObserver.observe(host);
 async function start(){let THREE;
  try{THREE=await import('https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.module.js')}catch(e){console.info('SWQS hero: 3D CDN unavailable; showing static fallback.');return;}
  let renderer;
  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){console.info('SWQS hero: WebGL unavailable; showing static fallback.');return;}
- renderer.setClearColor(0x061823,0);renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
- const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(0,.25,8.9);camera.lookAt(0,.05,0);
- scene.add(new THREE.HemisphereLight(0xc1fffc,0x091c2e,2.2));const key=new THREE.DirectionalLight(0xd4ffff,3.4);key.position.set(-4,5,6);scene.add(key);
- const rim=new THREE.PointLight(0x00dbd2,95,15);rim.position.set(3,0,2);scene.add(rim);
- const back=new THREE.PointLight(0x367cec,55,14);back.position.set(0,-2,-3);scene.add(back);
+ renderer.setClearColor(0xffffff,0);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(0,.18,8.9);camera.lookAt(0,0,0);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x7b9098,2.0));
+ const key=new THREE.DirectionalLight(0xffffff,3.0);key.position.set(-4,5,6);scene.add(key);
+ const fill=new THREE.DirectionalLight(0xc7e3eb,1.9);fill.position.set(4,-2,4);scene.add(fill);
+ // Procedural softbox reflection environment, no external image download.
+ const studio=document.createElement('canvas');studio.width=1024;studio.height=512;const ctx=studio.getContext('2d');
+ if(ctx){
+  const g=ctx.createLinearGradient(0,0,0,512);g.addColorStop(0,'#f4f9fa');g.addColorStop(.5,'#c8dce1');g.addColorStop(1,'#edf6f8');
+  ctx.fillStyle=g;ctx.fillRect(0,0,1024,512);ctx.fillStyle='#ffffff';ctx.fillRect(95,50,175,355);ctx.fillRect(715,55,180,340);
+  ctx.fillStyle='#506e7c';ctx.fillRect(492,40,25,380);
+  const tex=new THREE.CanvasTexture(studio);tex.mapping=THREE.EquirectangularReflectionMapping;
+  const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromEquirectangular(tex).texture;
+  tex.dispose();pmrem.dispose();
+ }
  const model=new THREE.Group();scene.add(model);
- // Water-droplet outline is formed by rotating its smooth cross-section.
- const path=new THREE.SplineCurve([new THREE.Vector2(0,-1.85),new THREE.Vector2(.62,-1.79),new THREE.Vector2(1.21,-1.40),new THREE.Vector2(1.47,-.73),new THREE.Vector2(1.40,-.03),new THREE.Vector2(1.08,.62),new THREE.Vector2(.53,1.34),new THREE.Vector2(0,2.07)]);
- const shellMat=new THREE.MeshPhysicalMaterial({color:0x57e4ee,metalness:.03,roughness:.058,transparent:true,opacity:.82,transmission:.26,ior:1.33,thickness:.7,clearcoat:1,clearcoatRoughness:.04,side:THREE.DoubleSide,depthWrite:false});
- const shell=new THREE.Mesh(new THREE.LatheGeometry(path.getPoints(100),96),shellMat);model.add(shell);
- const coreMat=new THREE.MeshPhysicalMaterial({color:0x1dc8d3,transparent:true,opacity:.25,roughness:.13,metalness:.28,emissive:0x0b3449,depthWrite:false});
- const core=new THREE.Mesh(new THREE.SphereGeometry(.84,48,32),coreMat);core.position.set(0,-.45,0);model.add(core);
- const haloMat=new THREE.MeshBasicMaterial({color:0x64ffe6,transparent:true,opacity:.65,depthWrite:false});
- const orbitRings=[];for(let i=0;i<4;i++){let ring=new THREE.Mesh(new THREE.TorusGeometry(2.1+i*.18,.009,6,154),haloMat.clone());ring.rotation.set((.25+i*.25)*Math.PI,0,i*.4);model.add(ring);orbitRings.push(ring);}
- const random=(()=>{let s=18771;return ()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}})();
- const positions=[];for(let i=0;i<185;i++){const theta=random()*Math.PI*2,rad=1.95+random()*.85,y=(random()-.5)*4.5;positions.push(Math.cos(theta)*rad,y,Math.sin(theta)*rad)}
- const particleGeo=new THREE.BufferGeometry();particleGeo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));const particleSystem=new THREE.Points(particleGeo,new THREE.PointsMaterial({color:0x8afce6,size:.038,transparent:true,opacity:.82,depthWrite:false}));model.add(particleSystem);
- // Three anchored inspection dots visibly mark the explorable volume.
- const dots=[];for(const [i,p] of [[0,[-1.58,.5,.5]],[1,[1.55,.28,.5]],[2,[0,-1.76,1.0]]]){const orb=new THREE.Mesh(new THREE.SphereGeometry(.06,20,12),new THREE.MeshBasicMaterial({color:i===0?0x99fdec:0xffdaa2}));orb.position.set(...p);model.add(orb);dots.push(orb)}
- const setSize=()=>{const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();model.scale.setScalar(w<450?.76:1);};
+ const path=new THREE.SplineCurve([
+  new THREE.Vector2(0,-1.85),new THREE.Vector2(.51,-1.80),
+  new THREE.Vector2(1.14,-1.44),new THREE.Vector2(1.45,-.74),
+  new THREE.Vector2(1.42,-.08),new THREE.Vector2(1.12,.61),
+  new THREE.Vector2(.55,1.41),new THREE.Vector2(0,2.13)
+ ]);
+ const geometry=new THREE.LatheGeometry(path.getPoints(136),128);geometry.computeVertexNormals();
+ // Water is optically colourless: glass refraction with IOR close to 1.333,
+ // contrasted by subtle reflected studio lights, never a cyan opaque core.
+ const shellMat=new THREE.MeshPhysicalMaterial({
+  color:0xffffff,metalness:0,roughness:.012,transmission:.98,thickness:1.3,
+  ior:1.333,clearcoat:1,clearcoatRoughness:.015,envMapIntensity:1.7,side:THREE.FrontSide
+ });
+ const shell=new THREE.Mesh(geometry,shellMat);model.add(shell);
+ // Fresnel surface contribution keeps a clear droplet readable on white.
+ const edgeMat=new THREE.ShaderMaterial({
+  vertexShader:[
+   'varying vec3 n; varying vec3 eye;',
+   'void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);',
+   'n=normalize(normalMatrix*normal);eye=normalize(-mv.xyz);',
+   'gl_Position=projectionMatrix*mv;}'
+  ].join('\n'),
+  fragmentShader:[
+   'varying vec3 n; varying vec3 eye;',
+   'void main(){float f=pow(1.0-abs(dot(normalize(n),normalize(eye))),2.8);',
+   'vec3 tint=mix(vec3(.99,1.,1.),vec3(.31,.57,.66),f);',
+   'gl_FragColor=vec4(tint,.007+.71*f);}'
+  ].join('\n'),
+  transparent:true,depthWrite:false,side:THREE.FrontSide
+ });
+ const edge=new THREE.Mesh(geometry,edgeMat);edge.renderOrder=1;model.add(edge);
+ // Thin softbox highlight arcs, reflecting external light—not a coloured fill.
+ const reflections=[];const highlightMaterial=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.3,depthWrite:false});
+ for(const pts of [
+  [[-.86,.75,.7],[-1.06,.2,.73],[-1.10,-.4,.71],[-.77,-1.12,.81]],
+  [[.80,.95,.56],[1.12,.33,.7],[1.20,-.3,.66],[.89,-.91,.8]]
+ ]){
+  const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));
+  const line=new THREE.Mesh(new THREE.TubeGeometry(curve,42,.013,6,false),highlightMaterial.clone());
+  line.renderOrder=2;model.add(line);reflections.push(line);
+ }
+ // The nine HTML hotspots are positioned by 3D projection each frame.
+ const anchorCoords={
+  ph:[-.96,.35,.76],hardness:[-.86,-.59,.9],solids:[.91,.37,.81],
+  chloramines:[1.10,-.41,.67],sulfate:[-.40,-1.24,.82],
+  conductivity:[.46,-1.14,.89],organic_carbon:[-.21,1.08,.70],
+  trihalomethanes:[.13,-.07,1.35],turbidity:[.09,-.83,1.24]
+ };
+ const hotspotNodes=[...document.querySelectorAll('.hero-water-point')].map(el=>({el,p:new THREE.Vector3(...anchorCoords[el.dataset.waterFeature])}));
+ const current=new THREE.Vector3();
+ const setSize=()=>{const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();model.scale.setScalar(w<450?.76:w<700?.88:.96);};
  new ResizeObserver(setSize).observe(host);setSize();
  let hasMoved=false;
  canvas.addEventListener('pointerdown',e=>{status.drag=true;status.lastX=e.clientX;status.lastY=e.clientY;hasMoved=false;canvas.setPointerCapture(e.pointerId)});
  canvas.addEventListener('pointermove',e=>{if(!status.drag)return;const dx=e.clientX-status.lastX,dy=e.clientY-status.lastY;if(Math.abs(dx)+Math.abs(dy)>2)hasMoved=true;status.toY+=dx*.007;status.toX=Math.max(-.7,Math.min(.7,status.toX+dy*.004));status.lastX=e.clientX;status.lastY=e.clientY});
  canvas.addEventListener('pointerup',()=>{status.drag=false});canvas.addEventListener('pointercancel',()=>{status.drag=false});
- canvas.addEventListener('click',()=>{if(!hasMoved){const ks=['ph','solids','turbidity'];select(ks[(ks.indexOf(status.active)+1+ks.length)%ks.length]);}});
+ canvas.addEventListener('click',()=>{if(!hasMoved){const ks=Object.keys(facts).filter(k=>k!=='intro');select(ks[(ks.indexOf(status.active)+1+ks.length)%ks.length]);}});
  const clock=new THREE.Clock();let frame;
- function render(){frame=requestAnimationFrame(render);if(!status.visible||document.hidden)return;const t=clock.getElapsedTime();status.ry+=(status.toY-status.ry)*.065;status.rx+=(status.toX-status.rx)*.065;
- if(status.running&&!status.drag){status.toY+=.0015;model.position.y=Math.sin(t*.95)*.085;orbitRings.forEach((r,i)=>{r.rotation.z+=.00055*(i%2?1:-1)});core.material.opacity=.25+Math.sin(t*1.3)*.045;}
- model.rotation.y=status.ry;model.rotation.x=status.rx;
- const col=status.active==='ph'?0x7feaff:status.active==='solids'?0xe4c68c:status.active==='turbidity'?0x9affe0:0x64ffe6;
- orbitRings.forEach(r=>r.material.color.lerp(new THREE.Color(col),.035));renderer.render(scene,camera);
+ function render(){
+  frame=requestAnimationFrame(render);
+  if(!status.visible||document.hidden)return;
+  const t=clock.getElapsedTime();
+  status.ry+=(status.toY-status.ry)*.065;
+  status.rx+=(status.toX-status.rx)*.065;
+  if(status.running&&!status.drag){status.toY+=.0010;model.position.y=Math.sin(t*.85)*.045;}
+  model.rotation.y=status.ry;model.rotation.x=status.rx;
+  model.updateMatrixWorld(true);
+  for(const item of hotspotNodes){
+   current.copy(item.p).applyMatrix4(model.matrixWorld);
+   const front=current.z>model.position.z+.06;
+   current.project(camera);
+   const visible=front&&current.z<1&&Math.abs(current.x)<.95&&Math.abs(current.y)<.94;
+   item.el.style.left=((current.x+1)*50).toFixed(2)+'%';
+   item.el.style.top=((1-current.y)*50).toFixed(2)+'%';
+   item.el.style.opacity=visible?'1':'0';
+   item.el.style.pointerEvents=visible?'auto':'none';
+  }
+  renderer.render(scene,camera);
  }
- fallback.classList.add('hidden');canvas.classList.add('ready');render();
- addEventListener('pagehide',()=>{cancelAnimationFrame(frame);renderer.dispose();shell.geometry.dispose();core.geometry.dispose();particleGeo.dispose();}, {once:true});
+ fallback.classList.add('hidden');
+ host.classList.add('webgl-ready');
+ canvas.classList.add('ready');
+ render();
+ addEventListener('pagehide',()=>{
+  cancelAnimationFrame(frame);
+  renderer.dispose();geometry.dispose();shellMat.dispose();edgeMat.dispose();
+  reflections.forEach(line=>{line.geometry.dispose();line.material.dispose()});
+ },{once:true});
 }
 start();

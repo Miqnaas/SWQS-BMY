@@ -1,6 +1,6 @@
 # Smart Water Quality Monitoring System — SWQS-BMY
 
-An academic research project with a real machine-learning benchmarking workflow, a browser-based Prediction Lab, a unified EDA/preprocessing notebook, and planned 3D research visualizations.
+An academic research project with a real machine-learning benchmarking workflow, a browser-based Prediction Lab, a unified EDA/preprocessing notebook, and a live interactive Research Explorer with plots and a preprocessing walkthrough; 3D sensor exploration is the next phase.
 
 **Important:** This system predicts a *dataset label*. It is **NOT** a drinking-water safety test, a certified laboratory instrument, or a basis for consumption decisions.
 
@@ -17,9 +17,10 @@ An academic research project with a real machine-learning benchmarking workflow,
 | `results/model_comparison.csv` | Recorded cross-validation comparison from the completed local experiment |
 | `MODEL_REPORT.md` | Experiment metrics, model selection, limitations |
 | `tests/` | Integrity and inference checks; artifact-dependent tests are skipped until retrained |
-| `academic/` | Academic-paper delivery guidance (PDF/DOCX not yet committed) |
+| `academic/` | Complete Sections 1–4 research paper (PDF and DOCX) |
+| `docs/` | Free GitHub Pages site: actual on-device ML inference + interactive EDA and research experience |
 
-The original CSV and generated trained model binary are **not yet included in this public repository**. The notebook and training source are available. Redistribution terms of the Kaggle dataset need verification.
+The original CSV, trained model binary, fitted evaluation metrics, and complete research paper are checked in. Dataset license: CC0 Public Domain; cite the original Kaggle source.
 
 ## Quick start
 
@@ -58,7 +59,7 @@ Scores returned by `predict_proba` are **uncalibrated model scores**. Do not tre
 
 ## Hosting
 
-This repository is source code, **not yet a live website**. The Python backend requires Python hosting; GitHub Pages alone will not execute FastAPI. See [DEPLOYMENT.md](DEPLOYMENT.md).
+The free public website is live at **https://miqnaas.github.io/SWQS-BMY/** and uses on-device inference with a validated export of the trained Random Forest. Python/FastAPI hosting is optional for future server-side workflows. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Dataset–sensor compatibility
 
@@ -68,9 +69,9 @@ Original dataset citation: Kadiwal, A. *Water Quality*. Kaggle, 2021. https://ww
 
 Repository: https://github.com/Miqnaas/SWQS-BMY
 
-The **free static Prediction Lab** is in `docs/`. It uses a browser-native export of the exact 160 fitted Random Forest trees, train-fitted imputation medians and StandardScaler parameters; inference happens client-side and requires no server or paid subscription.
+The **free static Prediction Lab** is in `docs/`, and the **interactive Research Explorer** is live at https://miqnaas.github.io/SWQS-BMY/research.html. It uses a browser-native export of the exact 160 fitted Random Forest trees, train-fitted imputation medians and StandardScaler parameters; inference happens client-side and requires no server or paid subscription.
 
-**One-time owner action needed:** In GitHub, open **Settings → Pages → Build and deployment → Source = GitHub Actions**, then save. The existing workflow `.github/workflows/deploy-pages.yml` publishes `docs/` on every push to `main`. Run the workflow manually from the Actions tab if needed. Once the deployment succeeds the expected site URL is **https://miqnaas.github.io/SWQS-BMY/** (do not describe it as live until the deployment is green and the URL loads).
+GitHub Pages is already enabled. `.github/workflows/deploy-pages.yml` publishes `docs/` on every push to `main`. Inspect GitHub Actions for deployment verification.
 
 The original FastAPI backend remains in `ml/api.py` and `web/` if a Python server is wanted later. It is **not required** for the free GitHub Pages site.
 
@@ -83,3 +84,14 @@ The original FastAPI backend remains in `ml/api.py` and `web/` if a Python serve
 - `docs/assets/forest.bin.gz`: exact fitted Random Forest nodes for browser inference; `model_manifest.json`: original preprocessing/metric parameters.
 
 
+
+## Interactive research explorer — Stage 2
+
+Visit https://miqnaas.github.io/SWQS-BMY/research.html for the browser-only academic experience:
+
+- Sections 1–4 overview and the downloadable research paper in PDF/DOCX.
+- Real CSV-driven class balance, missingness, 9 selectable histograms and boxplots, and an interactive 10×10 Pearson heatmap.
+- Choose an original CSV row and feature to see raw → training-median imputation → train-fitted StandardScaler output.
+- Zero paid backend dependencies. The page reads the included `docs/data/water_potability.csv` and fitted `docs/assets/model_manifest.json` locally in the browser.
+
+**Not yet built:** the advanced 3D water-and-ESP32 experience, hardware-connected readings, final presentation mode and live cross-device acceptance tests. Sensor readings are not direct substitutes for nine laboratory-defined model features.

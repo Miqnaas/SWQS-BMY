@@ -18,3 +18,23 @@ jobs:
         run: |
           python -m compileall -q ml
           python -m pytest -q
+
+      - name: Validate deployed research assets and browser JavaScript
+        run: |
+          node --check docs/assets/research.js
+          node --check docs/assets/app.js
+          node --check docs/assets/model.js
+          python - <<'PY'
+          from pathlib import Path
+          import csv, json
+          root=Path('docs')
+          for path in ('research.html','assets/research.css','assets/research.js','academic/Smart_Water_Quality_Paper.pdf','academic/Smart_Water_Quality_Paper.docx','data/water_potability.csv','assets/model_manifest.json'):
+              assert (root/path).is_file(), f'Missing required Pages asset: {path}'
+          with (root/'data/water_potability.csv').open(newline='') as f:
+              records=list(csv.DictReader(f))
+          assert len(records)==3276
+          assert {k:sum(not row[k] for row in records) for k in ('ph','Sulfate','Trihalomethanes')}=={'ph':491,'Sulfate':781,'Trihalomethanes':162}
+          manifest=json.loads((root/'assets/model_manifest.json').read_text())
+          assert len(manifest['features'])==9
+          print('Research website assets and original CSV verified')
+          PY

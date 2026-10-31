@@ -16,3 +16,80 @@ html.swqs-luxury .swqs-motion-on .swqs-enter{opacity:0;transform:translateY(27px
 html.swqs-luxury .swqs-tilt{--rx:0deg;--ry:0deg;transform:perspective(950px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift,0px));transition:transform .35s ease,box-shadow .35s;transform-style:preserve-3d;will-change:transform}html.swqs-luxury .swqs-tilt:hover{--lift:-6px}html.swqs-luxury .paper-figure img{cursor:zoom-in}html.swqs-luxury .paper-figure img:hover{transform:scale(1.018)}.swqs-lightbox{position:fixed;z-index:1000;inset:0;background:#09242edc;display:grid;place-items:center;padding:6vw;cursor:zoom-out}.swqs-lightbox img{max-width:100%;max-height:90vh;object-fit:contain;box-shadow:0 25px 90px #0008}
 @media(max-width:850px){.swqs-rail{display:none}html.swqs-luxury .global-nav.open{background:#fffffff7}html.swqs-luxury .global-nav.open a{color:#194858}html.swqs-luxury .cinematic-hero{min-height:940px}html.swqs-luxury .hero-art{opacity:.09}}
 @media(prefers-reduced-motion:reduce){html.swqs-luxury *,html.swqs-luxury *:before,html.swqs-luxury *:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}html.swqs-luxury .swqs-enter{opacity:1!important;transform:none!important}}
+
+/* High-contrast scientific workspaces and interactive chapter cards. */
+html.swqs-luxury body.page-research .tile,
+html.swqs-luxury body.page-research .insight,
+html.swqs-luxury body.page-research .demo-card,
+html.swqs-luxury body.page-research .flow-step,
+html.swqs-luxury body.page-research .paper-summary,
+html.swqs-luxury body.page-research .top-insights,
+html.swqs-luxury body.page-research .matrix-card,
+html.swqs-luxury body.page-research .lab-card,
+html.swqs-luxury body.page-research .feature-info{
+background:linear-gradient(155deg,#ffffff,#f0f8f7);border:1px solid #cbe2e4;color:#194456;box-shadow:0 10px 38px #18596710;border-radius:14px}
+html.swqs-luxury body.page-research .tile p,
+html.swqs-luxury body.page-research .flow-step small,
+html.swqs-luxury body.page-research .note,
+html.swqs-luxury body.page-research .controls label,
+html.swqs-luxury body.page-research .demo-controls label{color:#547783}
+html.swqs-luxury body.page-research .controls select,
+html.swqs-luxury body.page-research .demo-controls select,
+html.swqs-luxury body.page-research .demo-controls input{background:#fff;color:#174151;border:1px solid #afccd2}
+html.swqs-luxury body.page-research .btn.outline{color:#1a596b;border-color:#b5d4d9;background:#fff}
+html.swqs-luxury body.page-research .tabs button{color:#285f6c;border-color:#b5cfd3;background:#fff}
+html.swqs-luxury body.page-research .tabs button.active{background:#0c8b95;color:#fff}
+html.swqs-luxury body.page-research .water-art{filter:drop-shadow(0 25px 75px #0b829a26)}
+html.swqs-luxury body.page-research .chart-area{background:#0e2836;border-radius:14px;padding:16px;color:#e7f5f5}
+html.swqs-luxury body.page-research .chart-area canvas{max-width:100%}
+html.swqs-luxury body.page-research .paper-sections a{color:#137988}
+html.swqs-luxury body.page-research .stat-strip{background:#e6f4f2;color:#194656;border-radius:13px}
+html.swqs-luxury body.page-experience .details,
+html.swqs-luxury body.page-experience .gap-panel,
+html.swqs-luxury body.page-experience .sim-item{
+background:#fff;color:#194453;border:1px solid #c9dee1;border-radius:16px;box-shadow:0 10px 40px #1b66700a}
+html.swqs-luxury body.page-experience .gap-panel strong,
+html.swqs-luxury body.page-experience .details strong{color:#1a4f60}
+html.swqs-luxury body.page-experience .scene-menu,
+html.swqs-luxury body.page-experience .details h2{color:#194453}
+html.swqs-luxury body.page-experience .scene-toggle button{color:#1d5a68}
+html.swqs-luxury body.page-experience .scene-toggle button.selected{background:#0b8d98;color:white}
+html.swqs-luxury body.page-experience .viewport{background:radial-gradient(circle at 50% 48%,#185464,#0c2433 65%,#0a1e2e)}
+html.swqs-luxury body.page-experience .sim-item input[type=range]{accent-color:#078d93}
+html.swqs-luxury body.page-lab .metric,
+html.swqs-luxury body.page-lab .score-area,
+html.swqs-luxury body.page-lab .research-teaser,
+html.swqs-luxury body.page-lab .three-teaser{background:#fff;color:#174355;border:1px solid #c9dfe2;box-shadow:0 8px 30px #185d6e0c}
+html.swqs-luxury body.page-lab .panel h3,
+html.swqs-luxury body.page-lab .panel-header,
+html.swqs-luxury body.page-lab .panel label,
+html.swqs-luxury body.page-lab .panel .output-label,
+html.swqs-luxury body.page-lab .metric-value{color:#184353}
+html.swqs-luxury body.page-lab .panel p,
+html.swqs-luxury body.page-lab .panel .hint,
+html.swqs-luxury body.page-lab .metric-label,
+html.swqs-luxury body.page-lab .metric-sub{color:#557783}
+html.swqs-luxury body.page-lab .score-track{background:#d8e9ea}
+html.swqs-luxury body.page-lab .mode-switch button,
+html.swqs-luxury body.page-lab .subtle-btn{background:#f3faf9;color:#135665;border:1px solid #b7dadd}
+html.swqs-luxury body.page-lab .mode-switch button.active{background:#078d95;color:#fff}
+html.swqs-luxury body.page-lab .primary-btn{background:#078b94;color:white}
+html.swqs-luxury body.page-lab .orb{filter:drop-shadow(0 20px 45px #067e9228)}
+html.swqs-luxury body.page-presentation{background:#eef7f6;color:#173d4c}
+html.swqs-luxury body.page-presentation .presenter-nav,
+html.swqs-luxury body.page-presentation .presenter-bottom{color:#205568;border-color:#cadfe2}
+html.swqs-luxury body.page-presentation .slide{background:radial-gradient(circle at 80% 10%,#c5ebe9,transparent 60%),linear-gradient(150deg,#fff,#eaf5f4);border-color:#c7e1e3;color:#173b4b;box-shadow:0 22px 65px #163e4d18}
+html.swqs-luxury body.page-presentation .slide h1,
+html.swqs-luxury body.page-presentation .slide h2,
+html.swqs-luxury body.page-presentation .slide h3{color:#123a4b}
+html.swqs-luxury body.page-presentation .slide p,
+html.swqs-luxury body.page-presentation .slide li{color:#315d6a}
+html.swqs-luxury body.page-presentation .nav-status{color:#0d7d88}
+html.swqs-luxury .journey-card,
+html.swqs-luxury .team-card,
+html.swqs-luxury body.page-research .tile,
+html.swqs-luxury body.page-experience .sim-item{transition:transform .4s cubic-bezier(.18,.75,.25,1),border-color .3s,box-shadow .35s}
+html.swqs-luxury .journey-card:hover,
+html.swqs-luxury .team-card:hover,
+html.swqs-luxury body.page-research .tile:hover,
+html.swqs-luxury body.page-experience .sim-item:hover{border-color:#9acacb;box-shadow:0 22px 65px #14566b24}

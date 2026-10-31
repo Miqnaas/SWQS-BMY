@@ -1,6 +1,6 @@
 # Smart Water Quality Monitoring System — SWQS-BMY
 
-An academic research project with a real machine-learning benchmarking workflow, a browser-based Prediction Lab, a unified EDA/preprocessing notebook, and a live interactive Research Explorer with plots and a preprocessing walkthrough; 3D sensor exploration is the next phase.
+An academic research project with a real machine-learning benchmarking workflow, a browser-based Prediction Lab, a unified EDA/preprocessing notebook, and a live interactive Research Explorer, 3D water/ESP32 learning scene and 11-slide academic presentation.
 
 **Important:** This system predicts a *dataset label*. It is **NOT** a drinking-water safety test, a certified laboratory instrument, or a basis for consumption decisions.
 
@@ -94,4 +94,12 @@ Visit https://miqnaas.github.io/SWQS-BMY/research.html for the browser-only acad
 - Choose an original CSV row and feature to see raw → training-median imputation → train-fitted StandardScaler output.
 - Zero paid backend dependencies. The page reads the included `docs/data/water_potability.csv` and fitted `docs/assets/model_manifest.json` locally in the browser.
 
-**Not yet built:** the advanced 3D water-and-ESP32 experience, hardware-connected readings, final presentation mode and live cross-device acceptance tests. Sensor readings are not direct substitutes for nine laboratory-defined model features.
+**Available now:** the 3D water-and-ESP32 learning view and 11-slide academic Presentation Mode. **Still not implemented:** real hardware-connected readings, independently labeled sensor-model validation, or certified safety assessments. Cross-browser WebGL and full performance acceptance tests remain to be performed on physical devices. Sensor readings are not direct substitutes for nine laboratory-defined model features.
+
+## 3D & academic presentation
+
+- [3D Water & Sensor Explorer](https://miqnaas.github.io/SWQS-BMY/experience.html): interactive Three.js water droplet / conceptual ESP32 scene, hotspot descriptions, simulated pH/TDS/turbidity/EC/temperature values (not physical readings, not ML inputs).
+- [Defense Presentation Mode](https://miqnaas.github.io/SWQS-BMY/presentation.html): 11 slides with actual dataset/model statistics, keyboard navigation, fullscreen and optional speaker notes.
+- 3D uses a pinned public Three.js module from jsDelivr; a modern WebGL browser and internet access are required. The project has no paid Python server or inference API dependency.
+
+See [PRESENTATION_GUIDE.md](PRESENTATION_GUIDE.md) and [WEBSITE_QA.md](WEBSITE_QA.md) for the discussion outline and remaining verification.

@@ -64,4 +64,22 @@ This repository is source code, **not yet a live website**. The Python backend r
 
 The source data use nine physicochemical features; a basic low-cost ESP32 setup cannot supply all nine. The sensor design remains conceptual and separate from validated model inference.
 
-Original dataset citation: Kadiwal, A. *Water Quality*. Kaggle, 2021. https://www.kaggle.com/datasets/adityakadiwal/water-potability.
+Original dataset citation: Kadiwal, A. *Water Quality*. Kaggle, 2021. https://www.kaggle.com/datasets/adityakadiwal/water-potability.## GitHub and free deployment
+
+Repository: https://github.com/Miqnaas/SWQS-BMY
+
+The **free static Prediction Lab** is in `docs/`. It uses a browser-native export of the exact 160 fitted Random Forest trees, train-fitted imputation medians and StandardScaler parameters; inference happens client-side and requires no server or paid subscription.
+
+**One-time owner action needed:** In GitHub, open **Settings → Pages → Build and deployment → Source = GitHub Actions**, then save. The existing workflow `.github/workflows/deploy-pages.yml` publishes `docs/` on every push to `main`. Run the workflow manually from the Actions tab if needed. Once the deployment succeeds the expected site URL is **https://miqnaas.github.io/SWQS-BMY/** (do not describe it as live until the deployment is green and the URL loads).
+
+The original FastAPI backend remains in `ml/api.py` and `web/` if a Python server is wanted later. It is **not required** for the free GitHub Pages site.
+
+### Checked-in artifacts
+
+- `models/trained_pipeline.joblib`: trained scikit-learn Pipeline, losslessly compressed using joblib (loads with `joblib.load`).
+- `models/model_metrics.json` and `results/heldout_demo_samples.csv`: actual evaluation and example records.
+- `data/water_potability.csv`: Kaggle dataset, CC0 Public Domain. Attribution: https://www.kaggle.com/datasets/adityakadiwal/water-potability
+- `academic/Smart_Water_Quality_Paper.pdf` and `.docx`: Sections 1–4 deliverables.
+- `docs/assets/forest.bin.gz`: exact fitted Random Forest nodes for browser inference; `model_manifest.json`: original preprocessing/metric parameters.
+
+

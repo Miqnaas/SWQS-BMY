@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en"><head>
+<html class="swqs-luxury" lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Water Intelligence | Interactive Prediction Lab</title>
 <meta name="description" content="Explore research-only water potability classification through a real scikit-learn model, dataset examples and held-out evaluation."/>
 <link rel="stylesheet" href="./assets/style.css"/>
-</head><body>
+<link rel="stylesheet" href="./assets/luxury-v2.css"></head><body class="swqs-light page-lab">
 <div class="noise"></div>
 <header class="topbar wrap"><a class="logo" href="./"><span class="logo-icon">◈</span><span>WATER<span class="logo-accent">/</span>INTELLIGENCE</span></a><div class="topbar-right"><a class="research-nav-link" href="./">Home ↗</a><a class="research-nav-link" href="./research.html">Research Explorer ↗</a><a class="experience-nav-link" href="./experience.html">3D Experience ↗</a><a class="present-nav-link" href="./presentation.html">Presentation ↗</a><span class="dot"></span><span id="api-status">Loading local model</span><span class="version">RESEARCH BUILD · 01</span></div></header>
 <main class="wrap">
@@ -26,4 +26,4 @@
   </div>
   <section class="evaluation" id="evaluation"><div class="section-head compact"><div><span class="eyebrow">02 / SCIENTIFIC EVIDENCE</span><h2>Validation over presentation.</h2><p>We report class-specific errors rather than claiming that aggregate accuracy proves water safety.</p></div></div><div class="eval-grid"><article class="panel evaluation-panel"><div class="panel-eyebrow">HELD-OUT CONFUSION MATRIX</div><h3>What the model got wrong</h3><div class="confusion-label">Columns: predicted class</div><div class="matrix" id="confusion-matrix"><div>Loading evaluation…</div></div><p class="matrix-footnote">Rows represent actual dataset labels. The upper-right cell counts unsafe-to-safe mistakes (actual 0 → predicted 1).</p></article><article class="panel evaluation-panel"><div class="panel-eyebrow">CROSS-VALIDATION</div><h3>Compare five classifiers</h3><div id="model-bars" class="model-bars"><div>Loading comparison…</div></div><p class="matrix-footnote">Balanced accuracy across five stratified training folds; test data did not influence model selection.</p></article></div></section>
   <footer><div class="footer-logo">WATER / INTELLIGENCE</div><p>Smart Water Quality Monitoring System · University research project · Not a medical, regulatory, or drinking-water safety device.</p><p class="small">This demo uses the learned tree nodes and preprocessing parameters exported from an actual fitted scikit-learn pipeline. For scientific reproducibility, refer to the training notebook, source CSV and exported test metrics in the repository.</p><p class="small"><a href="https://github.com/Miqnaas/SWQS-BMY" target="_blank" rel="noopener">GitHub / Project Source</a> · <a href="./presentation.html">Presentation Mode</a> · <a href="./paper.html">Interactive paper</a> · <a href="./team.html">Our team</a> · <a href="./academic/Smart_Water_Quality_Paper.pdf">Research paper (PDF)</a></p></footer>
-</main><script src="./assets/model.js" defer></script><script src="./assets/app.js" defer></script></body></html>
+</main><script src="./assets/model.js" defer></script><script src="./assets/app.js" defer></script><script src="./assets/luxury-v2.js" defer></script></body></html>

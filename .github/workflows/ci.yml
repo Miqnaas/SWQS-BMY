@@ -26,6 +26,8 @@ jobs:
           node --check docs/assets/presentation.js
           node --check docs/assets/app.js
           node --check docs/assets/model.js
+          node --check docs/assets/hero-3d.js
+          node --check docs/assets/luxury-v2.js
           python - <<'PY'
           from pathlib import Path
           import csv, json
@@ -38,5 +40,9 @@ jobs:
           assert {k:sum(not row[k] for row in records) for k in ('ph','Sulfate','Trihalomethanes')}=={'ph':491,'Sulfate':781,'Trihalomethanes':162}
           manifest=json.loads((root/'assets/model_manifest.json').read_text())
           assert len(manifest['features'])==9
+          hero=(root/'index.html').read_text()
+          assert 'SWQS-BMY' in hero
+          assert hero.count('class="hero-water-point"')==9
+          assert (root/'assets/water-hero-v2.css').is_file()
           print('Research website assets and original CSV verified')
           PY

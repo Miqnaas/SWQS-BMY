@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+.env
+*.pyc
+node_modules/
+data/water_potability.csv
+models/trained_pipeline.joblib
+results/heldout_demo_samples.csv

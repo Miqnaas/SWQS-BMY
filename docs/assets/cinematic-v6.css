@@ -299,3 +299,24 @@ html.swqs-luxury body.page-home .science-copy .swqs-feature-control button:hover
  .swqs-v6-molecular-assembly,.swqs-v6-molecule-spark,.swqs-v6-molecular-orbit,.swqs-v6-molecule-stage,
  .swqs-v6-discover-ring,.swqs-v6-discover-orb,.swqs-v6-node{animation:none!important}
 }
+
+/* Interaction stacking repair: legacy inspector was pointer-events:none.
+   The overlay is fully interactive above WebGL. */
+html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-inspector,
+html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-inspector *,
+html.swqs-luxury body.page-home .swqs-v6-water .swqs-feature-quick,
+html.swqs-luxury body.page-home .swqs-v6-water .swqs-feature-quick button{
+ pointer-events:auto!important;
+}
+html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-inspector{z-index:30!important}
+html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-actions{z-index:31!important;pointer-events:auto!important}
+/* Stable surface hotspots whenever WebGL is unavailable (still interactable). */
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=ph]{left:32%;top:37%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=hardness]{left:36%;top:60%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=solids]{left:65%;top:37%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=chloramines]{left:52%;top:22%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=sulfate]{left:28%;top:73%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=conductivity]{left:71%;top:55%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=organic_carbon]{left:45%;top:76%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=trihalomethanes]{left:51%;top:47%}
+html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=turbidity]{left:61%;top:67%}

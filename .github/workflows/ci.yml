@@ -28,6 +28,8 @@ jobs:
           node --check docs/assets/model.js
           node --check docs/assets/hero-3d.js
           node --check docs/assets/luxury-v2.js
+          node --check docs/assets/visual-director-v3.js
+          node --check docs/assets/sensor-architecture.js
           python - <<'PY'
           from pathlib import Path
           import csv, json
@@ -44,5 +46,13 @@ jobs:
           assert 'SWQS-BMY' in hero
           assert hero.count('class="hero-water-point"')==9
           assert (root/'assets/water-hero-v2.css').is_file()
+          assert (root/'assets/visual-director-v3.css').is_file()
+          assert (root/'assets/visual-director-v3.js').is_file()
+          assert (root/'assets/sensor-architecture.js').is_file()
+          assert (root/'assets/team-approved-photo.webp').is_file()
+          assert 'id="architecture"' in hero
+          assert 'id="swqsSensorCanvas"' in hero
+          assert hero.count('data-swqs-feature=') == 9
+          assert 'team-approved-photo.webp' in hero
           print('Research website assets and original CSV verified')
           PY

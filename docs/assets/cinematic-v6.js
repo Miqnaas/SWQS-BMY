@@ -38,6 +38,26 @@
   };
   window.addEventListener('load',()=>{setTimeout(useFallback,3500)},{once:true});
  }
+ // Load the optional ESP32 3D scene near the sensor architecture chapter.
+ // This restores the useful lazy-loading behavior from the old static hero script.
+ const architecture=document.getElementById('architecture');
+ if(architecture){
+  let loaded=false;
+  const load=()=>{
+   if(loaded)return;loaded=true;
+   import('./sensor-architecture.js?v=3').catch(err=>{
+    console.warn('Optional sensor explorer could not load',err);
+    const status=document.getElementById('swqsArchitectureStatus');
+    if(status)status.textContent='3D module unavailable; the conceptual architecture is described in the adjacent panel.';
+   });
+  };
+  if('IntersectionObserver'in window){
+   const io=new IntersectionObserver(items=>{
+    if(items.some(x=>x.isIntersecting)){io.disconnect();load();}
+   },{rootMargin:'420px 0px'});
+   io.observe(architecture);
+  }else load();
+ }
  // Calm secondary animations when tab is hidden.
  document.addEventListener('visibilitychange',()=>document.body.classList.toggle('swqs-page-hidden',document.hidden));
 })();

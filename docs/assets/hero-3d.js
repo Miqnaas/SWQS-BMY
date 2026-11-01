@@ -105,6 +105,23 @@ async function start(){let THREE;
   const line=new THREE.Mesh(new THREE.TubeGeometry(curve,42,.013,6,false),highlightMaterial.clone());
   line.renderOrder=2;model.add(line);reflections.push(line);
  }
+ // Internal caustic filaments: subtle flowing highlights to suggest refracted water
+ // while the main mesh remains genuinely rotatable 3D geometry.
+ const caustics=[];const streaks=[
+  {color:0xf7ffff,opacity:.52,width:.027,pts:[
+   [-.14,1.24,.65],[-.38,.83,.91],[.29,.37,1.10],[.46,-.06,1.15],[-.31,-.51,1.12],[-.36,-1.03,.84],[.15,-1.45,.48]]},
+  {color:0x98f3f9,opacity:.46,width:.018,pts:[
+   [.28,1.16,.66],[.55,.62,.91],[-.18,.17,1.22],[-.46,-.28,1.08],[.21,-.87,.97],[.44,-1.25,.69]]},
+  {color:0xffffff,opacity:.28,width:.012,pts:[
+   [-.56,.72,.87],[-.06,.26,1.25],[.52,-.25,1.03],[.08,-.72,1.11],[-.09,-1.28,.73]]}
+ ];
+ for(const line of streaks){
+  const curve=new THREE.CatmullRomCurve3(line.pts.map(p=>new THREE.Vector3(...p)));
+  const geo=new THREE.TubeGeometry(curve,90,line.width,8,false);
+  const mat=new THREE.MeshBasicMaterial({color:line.color,transparent:true,opacity:line.opacity,depthWrite:false,depthTest:false});
+  const mesh=new THREE.Mesh(geo,mat);mesh.renderOrder=5;model.add(mesh);caustics.push(mesh);
+ }
+
  // The nine HTML hotspots are positioned by 3D projection each frame.
  const anchorCoords={
   ph:[-.96,.35,.76],hardness:[-.86,-.59,.9],solids:[.91,.37,.81],
@@ -150,7 +167,7 @@ async function start(){let THREE;
  addEventListener('pagehide',()=>{
   cancelAnimationFrame(frame);
   renderer.dispose();geometry.dispose();shellMat.dispose();edgeMat.dispose();volumeMaterial.dispose();dropletMat.dispose();bubbleGeo.dispose();
-  reflections.forEach(line=>{line.geometry.dispose();line.material.dispose()});
+  reflections.forEach(line=>{line.geometry.dispose();line.material.dispose()});caustics.forEach(line=>{line.geometry.dispose();line.material.dispose()});
  },{once:true});
 }
 start();

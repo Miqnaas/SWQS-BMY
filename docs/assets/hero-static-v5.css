@@ -113,7 +113,8 @@ html.swqs-luxury .evidence-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media(max-width:380px){html.swqs-luxury .hero-still-frame .hero-water-point-label{font-size:8px;padding:3px 5px}}
 @media(prefers-reduced-motion:no-preference){
- .hero-still-frame{animation:swqs-still-float 9s ease-in-out infinite alternate}
- @keyframes swqs-still-float{to{transform:translate3d(0,-6px,0)}}
+ /* Animate optics, not the interactive button container; this keeps touch targets stable. */
+ .hero-still-image{animation:swqs-water-glimmer 12s ease-in-out infinite alternate}
+ @keyframes swqs-water-glimmer{to{filter:saturate(1.08) contrast(1.045)}}
 }
 @media(prefers-reduced-motion:reduce){.hero-still-frame{animation:none!important}.hero-still-frame *{transition:none!important}}

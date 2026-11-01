@@ -320,3 +320,22 @@ html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-fea
 html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=organic_carbon]{left:45%;top:76%}
 html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=trihalomethanes]{left:51%;top:47%}
 html.swqs-luxury body.page-home .swqs-v6-water:not(.webgl-ready) [data-water-feature=turbidity]{left:61%;top:67%}
+
+
+/* Final small-screen readability: controls stay above the droplet, not on the text panel. */
+html.swqs-luxury body.page-home #science,
+html.swqs-luxury body.page-home #discover{scroll-margin-top:90px}
+@media(max-width:560px){
+ html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-actions{
+  top:7%;right:4%;bottom:auto!important;left:auto;
+  z-index:35!important;gap:6px
+ }
+ html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-actions button{
+  font-size:10px;padding:7px 9px;background:#ffffffef
+ }
+ html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-hint{display:none}
+ html.swqs-luxury body.page-home .swqs-v6-water .hero-3d-inspector{bottom:15px!important}
+ html.swqs-luxury body.page-home .swqs-material-shell.swqs-v6-material{
+  min-height:400px;padding-top:42px
+ }
+}

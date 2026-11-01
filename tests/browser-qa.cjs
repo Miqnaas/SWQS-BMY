@@ -53,7 +53,24 @@ const views=[
    if(v.width<=600){
     await page.locator('.nav-toggle').click();
     assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'true','mobile menu');
+    await page.locator('.nav-toggle').click();
    }
+   // Scroll to each chapter before a full-page screenshot so intersection-based
+   // motion is exercised rather than producing blank offscreen sections.
+   for(const selector of ['#question','#journey','#science','.model-section','#method-lab','#architecture','#team-story','.closing-section','.end-cta']){
+    await page.locator(selector).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(130);
+   }
+   if(v.name==='desktop'||v.name==='mobile'){
+    await page.locator('#science').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(750);
+    await page.locator('#science').screenshot({path:'/tmp/swqs-v6-section03-'+v.name+'.png'});
+    await page.locator('.closing-section').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(750);
+    await page.locator('.closing-section').screenshot({path:'/tmp/swqs-v6-section07-'+v.name+'.png'});
+   }
+   await page.locator('#start').scrollIntoViewIfNeeded();
+   await page.waitForTimeout(450);
    await page.screenshot({path:'/tmp/swqs-v6-'+v.name+'.png',fullPage:true});
    console.log('PASS',v.name,JSON.stringify({overflow:m.overflow,canvas:m.canvas,hotspots:m.points,closingWidth:Math.round(m.closingCopy.w),errors}));
    await page.close();

@@ -1,0 +1,30 @@
+name: SWQS responsive browser QA
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare Chromium
+        run: |
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Start GitHub Pages site locally
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory docs > /tmp/swqs-server.log 2>&1 &
+          sleep 2
+      - name: Desktop, mobile, accessibility and load-order smoke tests
+        run: node tests/browser-qa.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: swqs-browser-screenshots
+          path: /tmp/swqs-*.png
+          if-no-files-found: ignore

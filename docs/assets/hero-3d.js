@@ -33,15 +33,15 @@ async function start(){let THREE;
  try{THREE=await import('https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.module.js')}catch(e){console.info('SWQS hero: 3D CDN unavailable; showing static fallback.');return;}
  let renderer;
  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){console.info('SWQS hero: WebGL unavailable; showing static fallback.');return;}
- renderer.setClearColor(0xffffff,0);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
+ renderer.setClearColor(0xffffff,0);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.86;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.35));renderer.outputColorSpace=THREE.SRGBColorSpace;
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(0,.18,8.9);camera.lookAt(0,0,0);
- scene.add(new THREE.HemisphereLight(0xffffff,0x7b9da8,1.75));
- const key=new THREE.DirectionalLight(0xffffff,2.8);key.position.set(-4,5,6);scene.add(key);
- const fill=new THREE.DirectionalLight(0x93d4e3,2.0);fill.position.set(4,-2,4);scene.add(fill);
+ scene.add(new THREE.HemisphereLight(0xf0ffff,0x507c99,1.18));
+ const key=new THREE.DirectionalLight(0xf7ffff,2.25);key.position.set(-4,5,6);scene.add(key);
+ const fill=new THREE.DirectionalLight(0x42b7d4,1.5);fill.position.set(4,-2,4);scene.add(fill);
  // Procedural softbox reflection environment, no external image download.
  const studio=document.createElement('canvas');studio.width=1024;studio.height=512;const ctx=studio.getContext('2d');
  if(ctx){
-  const g=ctx.createLinearGradient(0,0,0,512);g.addColorStop(0,'#f4f9fa');g.addColorStop(.28,'#5d9aab');g.addColorStop(.49,'#e3faff');g.addColorStop(.7,'#86bccc');g.addColorStop(1,'#e8f8f9');
+  const g=ctx.createLinearGradient(0,0,0,512);g.addColorStop(0,'#edfefe');g.addColorStop(.2,'#2d7088');g.addColorStop(.49,'#8dd7e8');g.addColorStop(.72,'#0d5b7e');g.addColorStop(1,'#defbfe');
   ctx.fillStyle=g;ctx.fillRect(0,0,1024,512);ctx.fillStyle='#ffffff';ctx.fillRect(95,50,175,355);ctx.fillRect(715,55,180,340);
   ctx.fillStyle='#24526a';ctx.fillRect(492,40,25,380);ctx.fillStyle='#ebffff';ctx.fillRect(357,40,14,410);
   const tex=new THREE.CanvasTexture(studio);tex.mapping=THREE.EquirectangularReflectionMapping;
@@ -59,13 +59,13 @@ async function start(){let THREE;
  // Water is optically colourless: glass refraction with IOR close to 1.333,
  // contrasted by subtle reflected studio lights, never a cyan opaque core.
  const shellMat=new THREE.MeshPhysicalMaterial({
-  color:0xdff6fb,metalness:0,roughness:.017,transmission:.89,thickness:1.85,
-  ior:1.333,clearcoat:1,clearcoatRoughness:.012,envMapIntensity:2.15,side:THREE.FrontSide
+  color:0x65bbd3,metalness:0,roughness:.024,transmission:.64,thickness:1.55,
+  ior:1.333,clearcoat:1,clearcoatRoughness:.009,envMapIntensity:1.45,side:THREE.FrontSide
  });
  const shell=new THREE.Mesh(geometry,shellMat);model.add(shell);
  // A translucent water-volume shade adds optical depth without making the drop opaque.
- const volumeMaterial=new THREE.MeshBasicMaterial({color:0x68b7cf,transparent:true,opacity:.105,
-  side:THREE.BackSide,depthWrite:false,blending:THREE.NormalBlending});
+ const volumeMaterial=new THREE.MeshBasicMaterial({color:0x1598b9,transparent:true,opacity:.27,
+  side:THREE.DoubleSide,depthWrite:false,blending:THREE.NormalBlending});
  const volume=new THREE.Mesh(geometry,volumeMaterial);volume.scale.setScalar(.996);volume.renderOrder=0;model.add(volume);
  // Micro-droplets echo specular highlights; they are decorative, not measured pollutants.
  const dropletMat=new THREE.MeshPhysicalMaterial({color:0xe8ffff,metalness:0,roughness:.035,
@@ -89,8 +89,8 @@ async function start(){let THREE;
   fragmentShader:[
    'varying vec3 n; varying vec3 eye;',
    'void main(){float f=pow(1.0-abs(dot(normalize(n),normalize(eye))),2.8);',
-   'vec3 tint=mix(vec3(.80,.96,.98),vec3(.09,.34,.44),f);',
-   'gl_FragColor=vec4(tint,.039+.88*f);}'
+   'vec3 tint=mix(vec3(.46,.83,.91),vec3(.06,.31,.45),f);',
+   'gl_FragColor=vec4(tint,.14+.74*f);}'
   ].join('\n'),
   transparent:true,depthWrite:false,side:THREE.FrontSide
  });

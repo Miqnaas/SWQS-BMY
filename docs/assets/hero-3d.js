@@ -35,15 +35,15 @@ async function start(){let THREE;
  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){console.info('SWQS hero: WebGL unavailable; showing static fallback.');return;}
  renderer.setClearColor(0xffffff,0);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(0,.18,8.9);camera.lookAt(0,0,0);
- scene.add(new THREE.HemisphereLight(0xffffff,0x7b9098,2.0));
- const key=new THREE.DirectionalLight(0xffffff,3.0);key.position.set(-4,5,6);scene.add(key);
- const fill=new THREE.DirectionalLight(0xc7e3eb,1.9);fill.position.set(4,-2,4);scene.add(fill);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x7b9da8,1.75));
+ const key=new THREE.DirectionalLight(0xffffff,2.8);key.position.set(-4,5,6);scene.add(key);
+ const fill=new THREE.DirectionalLight(0x93d4e3,2.0);fill.position.set(4,-2,4);scene.add(fill);
  // Procedural softbox reflection environment, no external image download.
  const studio=document.createElement('canvas');studio.width=1024;studio.height=512;const ctx=studio.getContext('2d');
  if(ctx){
-  const g=ctx.createLinearGradient(0,0,0,512);g.addColorStop(0,'#f4f9fa');g.addColorStop(.5,'#c8dce1');g.addColorStop(1,'#edf6f8');
+  const g=ctx.createLinearGradient(0,0,0,512);g.addColorStop(0,'#f4f9fa');g.addColorStop(.28,'#5d9aab');g.addColorStop(.49,'#e3faff');g.addColorStop(.7,'#86bccc');g.addColorStop(1,'#e8f8f9');
   ctx.fillStyle=g;ctx.fillRect(0,0,1024,512);ctx.fillStyle='#ffffff';ctx.fillRect(95,50,175,355);ctx.fillRect(715,55,180,340);
-  ctx.fillStyle='#506e7c';ctx.fillRect(492,40,25,380);
+  ctx.fillStyle='#24526a';ctx.fillRect(492,40,25,380);ctx.fillStyle='#ebffff';ctx.fillRect(357,40,14,410);
   const tex=new THREE.CanvasTexture(studio);tex.mapping=THREE.EquirectangularReflectionMapping;
   const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromEquirectangular(tex).texture;
   tex.dispose();pmrem.dispose();
@@ -59,10 +59,25 @@ async function start(){let THREE;
  // Water is optically colourless: glass refraction with IOR close to 1.333,
  // contrasted by subtle reflected studio lights, never a cyan opaque core.
  const shellMat=new THREE.MeshPhysicalMaterial({
-  color:0xffffff,metalness:0,roughness:.012,transmission:.98,thickness:1.3,
-  ior:1.333,clearcoat:1,clearcoatRoughness:.015,envMapIntensity:1.7,side:THREE.FrontSide
+  color:0xdff6fb,metalness:0,roughness:.017,transmission:.89,thickness:1.85,
+  ior:1.333,clearcoat:1,clearcoatRoughness:.012,envMapIntensity:2.15,side:THREE.FrontSide
  });
  const shell=new THREE.Mesh(geometry,shellMat);model.add(shell);
+ // A translucent water-volume shade adds optical depth without making the drop opaque.
+ const volumeMaterial=new THREE.MeshBasicMaterial({color:0x68b7cf,transparent:true,opacity:.105,
+  side:THREE.BackSide,depthWrite:false,blending:THREE.NormalBlending});
+ const volume=new THREE.Mesh(geometry,volumeMaterial);volume.scale.setScalar(.996);volume.renderOrder=0;model.add(volume);
+ // Micro-droplets echo specular highlights; they are decorative, not measured pollutants.
+ const dropletMat=new THREE.MeshPhysicalMaterial({color:0xe8ffff,metalness:0,roughness:.035,
+  transmission:.67,ior:1.333,thickness:.24,envMapIntensity:1.75,transparent:true,opacity:.73});
+ const waterGlints=[];const bubbleGeo=new THREE.SphereGeometry(1,16,12);
+ for(let i=0;i<16;i++){
+  const a=i*2.39996;const r=.37+(i%4)*.23;
+  const g=new THREE.Mesh(bubbleGeo,dropletMat);
+  g.position.set(Math.cos(a)*r,(i%7)*.43-1.28,Math.sin(a)*.19+.88);
+  g.scale.setScalar(.025+(i%4)*.018);g.renderOrder=3;model.add(g);waterGlints.push(g);
+ }
+
  // Fresnel surface contribution keeps a clear droplet readable on white.
  const edgeMat=new THREE.ShaderMaterial({
   vertexShader:[
@@ -74,14 +89,14 @@ async function start(){let THREE;
   fragmentShader:[
    'varying vec3 n; varying vec3 eye;',
    'void main(){float f=pow(1.0-abs(dot(normalize(n),normalize(eye))),2.8);',
-   'vec3 tint=mix(vec3(.99,1.,1.),vec3(.31,.57,.66),f);',
-   'gl_FragColor=vec4(tint,.007+.71*f);}'
+   'vec3 tint=mix(vec3(.80,.96,.98),vec3(.09,.34,.44),f);',
+   'gl_FragColor=vec4(tint,.039+.88*f);}'
   ].join('\n'),
   transparent:true,depthWrite:false,side:THREE.FrontSide
  });
  const edge=new THREE.Mesh(geometry,edgeMat);edge.renderOrder=1;model.add(edge);
  // Thin softbox highlight arcs, reflecting external light—not a coloured fill.
- const reflections=[];const highlightMaterial=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.3,depthWrite:false});
+ const reflections=[];const highlightMaterial=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.45,depthWrite:false});
  for(const pts of [
   [[-.86,.75,.7],[-1.06,.2,.73],[-1.10,-.4,.71],[-.77,-1.12,.81]],
   [[.80,.95,.56],[1.12,.33,.7],[1.20,-.3,.66],[.89,-.91,.8]]
@@ -134,7 +149,7 @@ async function start(){let THREE;
  render();
  addEventListener('pagehide',()=>{
   cancelAnimationFrame(frame);
-  renderer.dispose();geometry.dispose();shellMat.dispose();edgeMat.dispose();
+  renderer.dispose();geometry.dispose();shellMat.dispose();edgeMat.dispose();volumeMaterial.dispose();dropletMat.dispose();bubbleGeo.dispose();
   reflections.forEach(line=>{line.geometry.dispose();line.material.dispose()});
  },{once:true});
 }

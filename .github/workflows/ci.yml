@@ -30,6 +30,7 @@ jobs:
           node --check docs/assets/luxury-v2.js
           node --check docs/assets/visual-director-v3.js
           node --check docs/assets/sensor-architecture.js
+          node --check docs/assets/identity-v4.js
           python - <<'PY'
           from pathlib import Path
           import csv, json
@@ -46,6 +47,10 @@ jobs:
           assert 'SWQS-BMY' in hero
           assert hero.count('class="hero-water-point"')==9
           assert (root/'assets/water-hero-v2.css').is_file()
+          assert (root/'assets/identity-v4.css').is_file()
+          assert (root/'assets/identity-v4.js').is_file()
+          assert 'identity-v4.css' in hero
+          assert 'swqs-hero-project' in hero
           assert (root/'assets/visual-director-v3.css').is_file()
           assert (root/'assets/visual-director-v3.js').is_file()
           assert (root/'assets/sensor-architecture.js').is_file()
@@ -54,5 +59,7 @@ jobs:
           assert 'id="swqsSensorCanvas"' in hero
           assert hero.count('data-swqs-feature=') == 9
           assert 'team-approved-photo.webp' in hero
+          for page in ('index.html','research.html','lab.html','experience.html','paper.html','team.html','presentation.html'):
+              assert 'identity-v4.css' in (root/page).read_text(), f'v4 missing from {page}'
           print('Research website assets and original CSV verified')
           PY

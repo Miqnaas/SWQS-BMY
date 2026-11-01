@@ -5,7 +5,7 @@
  const reduced=matchMedia('(prefers-reduced-motion:reduce)');
  if(!document.body.classList.contains('page-home'))return;
  const material=document.querySelector('.swqs-material-shell');
- if(material){
+ if(material && !material.classList.contains('swqs-v6-material')){
   const ribbon=document.createElement('div');ribbon.className='swqs-current-ribbon';ribbon.setAttribute('aria-hidden','true');
   const second=ribbon.cloneNode();material.append(ribbon,second);
   const canvas=document.createElement('canvas');canvas.className='swqs-fluid-field';canvas.setAttribute('aria-hidden','true');material.append(canvas);
@@ -55,7 +55,7 @@
   }
  }
  const closing=document.querySelector('.closing-section');
- if(closing){
+ if(closing && !closing.classList.contains('swqs-v6-closing')){
   const f=document.createElement('div');f.className='swqs-flow-visual';f.setAttribute('aria-hidden','true');
   f.innerHTML='<div class="swqs-flow-path"><span class="swqs-flow-node">Sensing</span><span class="swqs-flow-node">Data</span><span class="swqs-flow-node">Model</span><span class="swqs-flow-node">Explore</span></div>';
   closing.append(f);

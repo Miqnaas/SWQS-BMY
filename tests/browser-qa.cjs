@@ -1,54 +1,70 @@
-const { chromium } = require('playwright');
+const { chromium }=require('playwright');
 const assert=require('node:assert/strict');
 const base='http://127.0.0.1:4173';
-const viewports=[
+const views=[
  {name:'desktop',width:1440,height:900},
+ {name:'laptop',width:1024,height:768},
  {name:'tablet',width:768,height:1024},
  {name:'mobile',width:390,height:844},
  {name:'small-mobile',width:320,height:720}
 ];
 (async()=>{
- const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ const browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-webgl']});
  try{
-  for(const v of viewports){
+  for(const v of views){
    const page=await browser.newPage({viewport:{width:v.width,height:v.height},deviceScaleFactor:1});
-   const jsErrors=[];page.on('pageerror',e=>jsErrors.push(e.message));
-   let threeRequested=false;
-   page.on('request',r=>{if(/three(?:\.module)?\.js|cdn\.jsdelivr\.net\/npm\/three/i.test(r.url()))threeRequested=true;});
+   const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(base+'/',{waitUntil:'domcontentloaded'});
-   await page.locator('.hero-still-image').waitFor({state:'visible'});
    await page.evaluate(()=>document.fonts.ready);
-   const result=await page.evaluate(()=>({
-    overflow:Math.round(document.documentElement.scrollWidth-innerWidth),
-    pictureLoaded:!!document.querySelector('.hero-still-image')?.naturalWidth,
-    canvas:document.querySelectorAll('#heroCanvas').length,
-    title:document.querySelector('.hero-copy h1')?.getBoundingClientRect().toJSON(),
-    image:document.querySelector('.hero-still-frame')?.getBoundingClientRect().toJSON(),
-    inspector:document.querySelector('#heroInspector')?.getBoundingClientRect().toJSON(),
-    buttons:document.querySelectorAll('.hero-water-point').length
-   }));
-   assert.equal(result.buttons,9,'nine real feature hotspots');
-   assert.ok(result.pictureLoaded,'water image loads');
-   assert.equal(result.canvas,0,'no homepage WebGL');
-   assert.ok(result.overflow<=3,'no mobile/desktop horizontal scroll: '+v.name+' '+result.overflow);
-   assert.equal(threeRequested,false,'heavy Three.js is deferred: '+v.name);
-   if(v.width>=921)assert.ok(result.title.right<=result.image.left+14,'headline/image separation: '+v.name);
-   else assert.ok(result.title.bottom<=result.image.top+16,'stacked title/image separation: '+v.name);
-   await page.locator('[data-water-feature=solids]').click();
-   assert.equal(await page.locator('#heroInspectorTitle').innerText(),'Solids');
-   await page.locator('[data-water-feature=turbidity]').click();
-   assert.equal(await page.locator('#heroInspectorTitle').innerText(),'Turbidity');
-   if(v.width<=600){await page.locator('.nav-toggle').click();assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'true')}
-   await page.screenshot({path:'/tmp/swqs-'+v.name+'.png',fullPage:true});
-   console.log('PASS',v.name,JSON.stringify({overflow:result.overflow,image:result.pictureLoaded,hotspots:result.buttons,threeAboveFold:threeRequested,jsErrors}));
+   await page.locator('#heroInspectorTitle').waitFor({state:'visible'});
+   const m=await page.evaluate(()=>{
+    const box=sel=>{const r=document.querySelector(sel)?.getBoundingClientRect();return r?{x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}:null};
+    const style=sel=>getComputedStyle(document.querySelector(sel)).display;
+    return {
+     width:innerWidth,overflow:document.documentElement.scrollWidth-innerWidth,
+     canvas:document.querySelectorAll('#heroCanvas').length,
+     points:document.querySelectorAll('.hero-water-point').length,
+     moleculeO:document.querySelectorAll('.swqs-v6-atom.oxygen').length,
+     moleculeH:document.querySelectorAll('.swqs-v6-atom.hydrogen').length,
+     moleculeDisplay:style('.swqs-molecule-stage'),
+     closing:box('.closing-section'),closingCopy:box('.closing-copy'),closingScene:box('.swqs-v6-discover-scene'),
+     heroCopy:box('.hero-copy'),heroViewer:box('#heroViewer')
+    };
+   });
+   assert.ok(m.overflow<=3,v.name+': horizontal overflow '+m.overflow);
+   assert.equal(m.canvas,1,'WebGL canvas');
+   assert.equal(m.points,9,'hotspots');
+   assert.equal(m.moleculeO,1,'oxygen');
+   assert.equal(m.moleculeH,2,'hydrogen');
+   assert.notEqual(m.moleculeDisplay,'none','H2O visible');
+   assert.ok(m.closingCopy.w >= (v.width<=380?240:270),v.name+': closing text width '+m.closingCopy.w);
+   assert.ok(m.closingScene.w>180,v.name+': closing visual width');
+   if(v.width>850){
+    assert.ok(m.heroCopy.right<=m.heroViewer.x+45,v.name+': hero desktop layout');
+    assert.ok(m.closingCopy.right<=m.closingScene.x+55,v.name+': closing desktop layout');
+   }else{
+    assert.ok(m.heroCopy.bottom<=m.heroViewer.y+35,v.name+': hero stacked layout');
+    assert.ok(m.closingCopy.bottom<=m.closingScene.y+35,v.name+': closing stacked layout');
+   }
+   await page.locator('[data-water-select="solids"]').click();
+   await page.waitForFunction(()=>document.querySelector('#heroInspectorTitle')?.textContent==='Dissolved substances');
+   await page.locator('[data-water-select="turbidity"]').click();
+   await page.waitForFunction(()=>document.querySelector('#heroInspectorTitle')?.textContent==='Optical clarity');
+   if(v.width<=600){
+    await page.locator('.nav-toggle').click();
+    assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'true','mobile menu');
+   }
+   await page.screenshot({path:'/tmp/swqs-v6-'+v.name+'.png',fullPage:true});
+   console.log('PASS',v.name,JSON.stringify({overflow:m.overflow,canvas:m.canvas,hotspots:m.points,closingWidth:Math.round(m.closingCopy.w),errors}));
    await page.close();
   }
   for(const path of ['research.html','lab.html','paper.html','team.html','experience.html','presentation.html']){
-   const page=await browser.newPage({viewport:{width:390,height:844}});
-   await page.goto(base+'/'+path,{waitUntil:'domcontentloaded'});
-   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
-   console.log('SUBPAGE',path,'mobile overflow',overflow);
-   await page.close();
+   const p=await browser.newPage({viewport:{width:390,height:844}});
+   await p.goto(base+'/'+path,{waitUntil:'domcontentloaded'});
+   const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+   assert.ok(overflow<=3,path+' horizontal overflow '+overflow);
+   console.log('SUBPAGE PASS',path);
+   await p.close();
   }
- }finally{await browser.close()}
+ }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

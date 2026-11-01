@@ -52,7 +52,7 @@ jobs:
           assert (root/'assets/identity-v4.css').is_file()
           assert (root/'assets/identity-v4.js').is_file()
           assert 'identity-v4.css' in hero
-          assert 'swqs-hero-project' in hero
+          assert 'swqs-hero-message' in hero
           assert (root/'assets/cinematic-v6.css').is_file()
           assert (root/'assets/cinematic-v6.js').is_file()
           assert 'cinematic-v6.css' in hero
